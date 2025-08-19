@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { ImageUpload } from '@/components/ImageUpload';
@@ -6,7 +6,10 @@ import { ModelSelector } from '@/components/ModelSelector';
 import { PredictionResult } from '@/components/PredictionResult';
 import { LoadingSpinner } from '@/components/LoadingSpinner';
 import { useToast } from '@/hooks/use-toast';
-import { Leaf, Zap, AlertCircle, Github } from 'lucide-react';
+import { Leaf, Zap, AlertCircle, Github, LogOut, Info } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
+import { useNavigate } from 'react-router-dom';
+import type { User, Session } from '@supabase/supabase-js';
 
 interface PredictionResponse {
   prediction: string;
@@ -18,7 +21,39 @@ const Index = () => {
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState<PredictionResponse | null>(null);
+  const [user, setUser] = useState<User | null>(null);
+  const [session, setSession] = useState<Session | null>(null);
+  const [isAuthLoading, setIsAuthLoading] = useState(true);
   const { toast } = useToast();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // Set up auth state listener
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        setSession(session);
+        setUser(session?.user ?? null);
+        setIsAuthLoading(false);
+        
+        if (!session?.user && !isAuthLoading) {
+          navigate('/auth');
+        }
+      }
+    );
+
+    // Check for existing session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+      setUser(session?.user ?? null);
+      setIsAuthLoading(false);
+      
+      if (!session?.user) {
+        navigate('/auth');
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, [navigate, isAuthLoading]);
 
   const handleImageSelect = (file: File) => {
     setSelectedImage(file);
@@ -28,6 +63,24 @@ const Index = () => {
   const handleClearImage = () => {
     setSelectedImage(null);
     setResult(null);
+  };
+
+  const handleSignOut = async () => {
+    try {
+      const { error } = await supabase.auth.signOut();
+      if (error) throw error;
+      
+      toast({
+        title: "Signed out successfully",
+        description: "You have been logged out.",
+      });
+    } catch (error: any) {
+      toast({
+        title: "Sign out failed",
+        description: error.message || "An error occurred during sign out.",
+        variant: "destructive",
+      });
+    }
   };
 
   const handlePredict = async () => {
@@ -76,22 +129,56 @@ const Index = () => {
     }
   };
 
+  if (isAuthLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-subtle flex items-center justify-center">
+        <LoadingSpinner message="Loading..." />
+      </div>
+    );
+  }
+
+  if (!user) {
+    return null; // Will redirect to auth
+  }
+
   return (
     <div className="min-h-screen bg-gradient-subtle">
       {/* Header */}
       <div className="bg-gradient-primary shadow-soft">
         <div className="max-w-4xl mx-auto px-4 py-6">
-          <div className="flex items-center space-x-3">
-            <div className="w-12 h-12 bg-primary-foreground/20 rounded-xl flex items-center justify-center shadow-soft">
-              <Leaf className="w-6 h-6 text-primary-foreground" />
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-3">
+              <div className="w-12 h-12 bg-primary-foreground/20 rounded-xl flex items-center justify-center shadow-soft">
+                <Leaf className="w-6 h-6 text-primary-foreground" />
+              </div>
+              <div>
+                <h1 className="text-2xl font-bold text-primary-foreground">
+                  Jute Fiber Variety Identification
+                </h1>
+                <p className="text-primary-foreground/80 text-sm">
+                  Welcome, {user?.email} • AI-powered classification
+                </p>
+              </div>
             </div>
-            <div>
-              <h1 className="text-2xl font-bold text-primary-foreground">
-                Jute Fiber Variety Identification
-              </h1>
-              <p className="text-primary-foreground/80 text-sm">
-                AI-powered classification using deep learning models
-              </p>
+            <div className="flex items-center space-x-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => navigate('/about')}
+                className="bg-primary-foreground/10 border-primary-foreground/20 text-primary-foreground hover:bg-primary-foreground/20"
+              >
+                <Info className="w-4 h-4 mr-2" />
+                About
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleSignOut}
+                className="bg-primary-foreground/10 border-primary-foreground/20 text-primary-foreground hover:bg-primary-foreground/20"
+              >
+                <LogOut className="w-4 h-4 mr-2" />
+                Sign Out
+              </Button>
             </div>
           </div>
         </div>
