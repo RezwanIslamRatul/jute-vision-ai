@@ -10,14 +10,18 @@ import { Leaf, Zap, AlertCircle, Github, LogOut, Info } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useNavigate } from 'react-router-dom';
 import type { User, Session } from '@supabase/supabase-js';
+import { getApiUrl, API_CONFIG } from '@/config/api';
 
 interface PredictionResponse {
-  prediction: string;
-  confidence: number;
+  model: string;
+  top1_label: string;
+  top1_confidence: number;
+  topk: Array<{label: string; confidence: number}>;
+  latency_ms: number;
 }
 
 const Index = () => {
-  const [selectedModel, setSelectedModel] = useState('ResNet152V2');
+  const [selectedModel, setSelectedModel] = useState('combined');
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState<PredictionResponse | null>(null);
@@ -98,13 +102,12 @@ const Index = () => {
 
     try {
       const formData = new FormData();
-      formData.append('image', selectedImage);
-      formData.append('model', selectedModel);
+      formData.append('file', selectedImage);
 
-      const response = await fetch('/predict', {
-        method: 'POST',
-        body: formData,
-      });
+        const response = await fetch(getApiUrl(API_CONFIG.ENDPOINTS.PREDICT(selectedModel)), {
+          method: 'POST',
+          body: formData,
+        });
 
       if (!response.ok) {
         throw new Error(`Server error: ${response.status}`);
@@ -115,7 +118,7 @@ const Index = () => {
       
       toast({
         title: "Prediction Complete",
-        description: `Identified as ${data.prediction} with ${data.confidence.toFixed(1)}% confidence.`,
+        description: `Identified as ${data.top1_label} with ${(data.top1_confidence * 100).toFixed(1)}% confidence.`,
       });
     } catch (error) {
       console.error('Prediction error:', error);
@@ -227,8 +230,8 @@ const Index = () => {
             {result && !isLoading && (
               <div className="border-t border-border pt-8">
                 <PredictionResult
-                  prediction={result.prediction}
-                  confidence={result.confidence}
+                  prediction={result.top1_label}
+                  confidence={result.top1_confidence * 100}
                   model={selectedModel}
                 />
               </div>
