@@ -11,15 +11,15 @@ interface ModelSelectorProps {
 const models = [
   {
     value: 'micro',
-    label: 'ResNet152V2 (Combined)',
-    description: 'Best for mixed dataset images',
-    icon: Brain
+    label: 'ResNet152V2 (Micro)',
+    description: 'Micro dataset model',
+    icon: Microscope
   },
   {
     value: 'phone',
-    label: 'ResNet101V2 (Microscope)',
-    description: 'Optimized for microscope images',
-    icon: Microscope
+    label: 'ResNet101V2 (Phone)',
+    description: 'Phone dataset model',
+    icon: Smartphone
   }
 ];
 
