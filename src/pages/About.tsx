@@ -76,21 +76,15 @@ const About = () => {
             </CardHeader>
             <CardContent className="space-y-3">
               <div className="space-y-2">
-                <h4 className="font-semibold text-foreground">ResNet152V2</h4>
+                <h4 className="font-semibold text-foreground">ResNet152V2 (Micro)</h4>
                 <p className="text-sm text-muted-foreground">
-                  Combined dataset model with the highest overall accuracy for general-purpose classification.
+                  Deep residual network optimized for microscopic jute fiber images with high-resolution detail analysis.
                 </p>
               </div>
               <div className="space-y-2">
-                <h4 className="font-semibold text-foreground">EfficientNetV2B0</h4>
+                <h4 className="font-semibold text-foreground">NASNetMobile (Phone)</h4>
                 <p className="text-sm text-muted-foreground">
-                  Optimized for microscopic images with excellent precision for detailed fiber analysis.
-                </p>
-              </div>
-              <div className="space-y-2">
-                <h4 className="font-semibold text-foreground">ResNet101V2</h4>
-                <p className="text-sm text-muted-foreground">
-                  Specialized for smartphone images, making field identification accessible.
+                  Neural Architecture Search model designed for smartphone images, providing excellent accuracy with mobile optimization.
                 </p>
               </div>
             </CardContent>
@@ -142,7 +136,7 @@ const About = () => {
                   <div>
                     <h4 className="font-semibold text-foreground">Multi-Model Support</h4>
                     <p className="text-sm text-muted-foreground">
-                      Choose from three specialized models based on your image type and requirements.
+                      Choose from two specialized models optimized for different image types and use cases.
                     </p>
                   </div>
                 </div>

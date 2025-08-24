@@ -21,7 +21,7 @@ interface PredictionResponse {
 }
 
 const Index = () => {
-  const [selectedModel, setSelectedModel] = useState('combined');
+  const [selectedModel, setSelectedModel] = useState('micro');
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState<PredictionResponse | null>(null);
@@ -266,9 +266,9 @@ const Index = () => {
               <div className="space-y-2">
                 <h3 className="font-semibold text-foreground">Model Accuracy</h3>
                 <ul className="text-sm text-muted-foreground space-y-1">
-                  <li>• ResNet152V2: Best overall performance</li>
-                  <li>• EfficientNetV2B0: Optimized for microscope</li>
-                  <li>• ResNet101V2: Designed for phone images</li>
+                  <li>• ResNet152V2: Best overall performance for micro images</li>
+                  <li>• NASNetMobile: Optimized for phone images with high accuracy</li>
+                  <li>• Both models trained on specialized datasets</li>
                   <li>• Confidence scores indicate reliability</li>
                 </ul>
               </div>

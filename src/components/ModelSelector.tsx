@@ -17,7 +17,7 @@ const models = [
   },
   {
     value: 'phone',
-    label: 'ResNet101V2 (Phone)',
+    label: 'NASNetMobile (Phone)',
     description: 'Phone dataset model',
     icon: Smartphone
   }
