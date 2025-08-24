@@ -1,8 +1,8 @@
 // API Configuration
 export const API_CONFIG = {
   // Replace this with your actual Render deployment URL
-  BASE_URL: 'https://smartjute-backend.onrender.com',
-  // For local development, use: 'http://localhost:8000'
+  BASE_URL: http://localhost:8000',
+  // For local development, use: 'https://smartjute-backend.onrender.com'
   
   ENDPOINTS: {
     PREDICT: (model: string) => `/predict/${model}`,
