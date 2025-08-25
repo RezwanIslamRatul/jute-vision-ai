@@ -103,12 +103,12 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
             disabled={disabled}
           />
           <div className="flex flex-col items-center justify-center space-y-4">
-            <div className={cn(
-              "w-16 h-16 rounded-full flex items-center justify-center",
-              "bg-gradient-primary shadow-soft"
-            )}>
-              <Upload className="w-8 h-8 text-primary-foreground" />
-            </div>
+          <div className={cn(
+            "w-16 h-16 rounded-full flex items-center justify-center",
+            "bg-gradient-primary shadow-soft animate-float"
+          )}>
+            <Upload className="w-8 h-8 text-primary-foreground" />
+          </div>
             <div className="text-center">
               <p className="text-lg font-medium text-foreground mb-2">
                 Upload Jute Fiber Image
@@ -123,13 +123,13 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
           </div>
         </div>
       ) : (
-        <div className="relative rounded-lg overflow-hidden shadow-medium bg-card">
+        <div className="relative rounded-lg overflow-hidden shadow-medium bg-card animate-scale-in">
           {preview && (
-            <div className="relative">
+            <div className="relative group">
               <img
                 src={preview}
                 alt="Selected jute fiber"
-                className="w-full h-64 object-cover"
+                className="w-full h-64 object-cover transition-transform duration-300 group-hover:scale-105"
               />
               <button
                 onClick={handleClear}

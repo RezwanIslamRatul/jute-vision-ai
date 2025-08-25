@@ -28,8 +28,8 @@ export const PredictionResult: React.FC<PredictionResultProps> = ({
   };
 
   return (
-    <div className={cn("w-full", className)}>
-      <div className="bg-gradient-subtle rounded-lg border border-border shadow-medium overflow-hidden">
+    <div className={cn("w-full animate-fade-in", className)}>
+      <div className="bg-gradient-card rounded-lg border border-border shadow-elegant overflow-hidden">
         {/* Header */}
         <div className="bg-gradient-success p-4">
           <div className="flex items-center space-x-3">
@@ -75,12 +75,13 @@ export const PredictionResult: React.FC<PredictionResultProps> = ({
               </span>
             </div>
 
-            {/* Progress Bar */}
+            {/* Enhanced Progress Bar */}
             <div className="relative">
-              <div className="w-full bg-muted rounded-full h-3 overflow-hidden">
+              <div className="w-full bg-muted rounded-full h-4 overflow-hidden shadow-inner">
                 <div 
                   className={cn(
-                    "h-full transition-all duration-700 ease-out rounded-full",
+                    "h-full transition-all duration-1000 ease-out rounded-full relative",
+                    "before:content-[''] before:absolute before:inset-0 before:animate-shimmer",
                     confidence >= 90 ? "bg-gradient-success" : 
                     confidence >= 70 ? "bg-gradient-primary" : "bg-muted-foreground"
                   )}

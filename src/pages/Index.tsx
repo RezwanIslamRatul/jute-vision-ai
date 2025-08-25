@@ -7,6 +7,8 @@ import { PredictionResult } from '@/components/PredictionResult';
 import { LoadingSpinner } from '@/components/LoadingSpinner';
 import { useToast } from '@/hooks/use-toast';
 import { Leaf, Zap, AlertCircle, Github, LogOut, Info } from 'lucide-react';
+import { FeatureCard } from '@/components/FeatureCard';
+import { cn } from '@/lib/utils';
 import { supabase } from '@/integrations/supabase/client';
 import { useNavigate } from 'react-router-dom';
 import type { User, Session } from '@supabase/supabase-js';
@@ -212,10 +214,15 @@ const Index = () => {
                 onClick={handlePredict}
                 disabled={!selectedImage || isLoading}
                 size="lg"
-                className="px-8 py-3 bg-gradient-primary hover:bg-primary-hover text-primary-foreground font-semibold shadow-medium hover:shadow-glow transition-all duration-200"
+                className={cn(
+                  "px-8 py-3 bg-gradient-primary hover:bg-primary-hover text-primary-foreground font-semibold",
+                  "shadow-medium hover:shadow-glow transition-all duration-300 transform hover:scale-105",
+                  isLoading && "animate-pulse-glow",
+                  !selectedImage && "opacity-60 cursor-not-allowed"
+                )}
               >
-                <Zap className="w-5 h-5 mr-2" />
-                {isLoading ? 'Analyzing...' : 'Predict Variety'}
+                <Zap className={cn("w-5 h-5 mr-2", isLoading && "animate-pulse")} />
+                {isLoading ? 'Analyzing Fiber...' : 'Predict Jute Variety'}
               </Button>
             </div>
 
@@ -239,37 +246,46 @@ const Index = () => {
           </div>
         </Card>
 
-        {/* Info Cards */}
-        <div className="grid md:grid-cols-2 gap-6">
-          <Card className="p-6 shadow-soft border-border/50 bg-card/60 backdrop-blur-sm">
-            <div className="flex items-start space-x-3">
-              <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
-                <AlertCircle className="w-5 h-5 text-primary" />
-              </div>
-              <div className="space-y-2">
-                <h3 className="font-semibold text-foreground">Image Requirements</h3>
-                <ul className="text-sm text-muted-foreground space-y-1">
-                  <li>• Clear, well-lit images of jute fibers</li>
-                  <li>• Microscope or high-quality phone images</li>
-                  <li>• Supported formats: JPG, PNG, WEBP</li>
-                  <li>• Recommended size: Less than 10MB</li>
-                </ul>
-              </div>
-            </div>
-          </Card>
+        {/* Enhanced Info Cards */}
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <FeatureCard
+            icon={AlertCircle}
+            title="Image Requirements"
+            description={
+              <ul className="space-y-1">
+                <li>• Clear, well-lit jute fiber images</li>
+                <li>• Microscope or phone camera quality</li>
+                <li>• JPG, PNG, WEBP formats</li>
+                <li>• Maximum size: 10MB</li>
+              </ul>
+            }
+          />
 
-          <Card className="p-6 shadow-soft border-border/50 bg-card/60 backdrop-blur-sm">
+          <FeatureCard
+            icon={Leaf}
+            title="Model Performance"
+            description={
+              <ul className="space-y-1">
+                <li>• ResNet152V2: High precision microscopy</li>
+                <li>• NASNetMobile: Mobile-optimized accuracy</li>
+                <li>• Specialized agricultural datasets</li>
+                <li>• Real-time confidence scoring</li>
+              </ul>
+            }
+          />
+
+          <Card className="p-6 shadow-soft border-border/50 bg-gradient-hero/10 backdrop-blur-sm animate-fade-in md:col-span-2 lg:col-span-1">
             <div className="flex items-start space-x-3">
-              <div className="w-10 h-10 bg-success/10 rounded-lg flex items-center justify-center">
-                <Leaf className="w-5 h-5 text-success" />
+              <div className="w-10 h-10 bg-jute-accent/20 rounded-lg flex items-center justify-center animate-float">
+                <Zap className="w-5 h-5 text-jute-accent" />
               </div>
               <div className="space-y-2">
-                <h3 className="font-semibold text-foreground">Model Accuracy</h3>
+                <h3 className="font-semibold text-foreground">AI Features</h3>
                 <ul className="text-sm text-muted-foreground space-y-1">
-                  <li>• ResNet152V2: Best overall performance for micro images</li>
-                  <li>• NASNetMobile: Optimized for phone images with high accuracy</li>
-                  <li>• Both models trained on specialized datasets</li>
-                  <li>• Confidence scores indicate reliability</li>
+                  <li>• Real-time fiber analysis</li>
+                  <li>• Multi-variety classification</li>
+                  <li>• Quality assessment scoring</li>
+                  <li>• Agricultural decision support</li>
                 </ul>
               </div>
             </div>
